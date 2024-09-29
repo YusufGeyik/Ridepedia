@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
@@ -15,21 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
- @Bean
- public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
- {
-     http.authorizeHttpRequests(req->req.requestMatchers("/api/ridepedia/auth/**").permitAll().anyRequest().authenticated());
-
-/*
-
-     http.authorizeHttpRequests(req->req.requestMatchers("/api/ridepedia/auth/**").permitAll().requestMatchers("/api/ridepedia").hasRole("ADMIN").anyRequest().authenticated());
-*/
-
-    http  .csrf(AbstractHttpConfigurer::disable);
-
-     return http.build();
-
-
- }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/ridepedia/auth/**").permitAll().anyRequest().authenticated()
+                .anyRequest().authenticated()
+        );
+        return http.build();
+    }
 
 }

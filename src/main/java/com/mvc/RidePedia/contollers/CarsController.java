@@ -50,7 +50,7 @@ public class CarsController {
 
 
 
-        @PostMapping("/ridepedia/create")
+        @PostMapping("/ridepedia")
         @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CarDto> createCar(@RequestBody CarDto carDto)
         {
@@ -62,7 +62,7 @@ public class CarsController {
 
 
 
-        @PutMapping("/ridepedia/{id}/update")
+        @PutMapping("/ridepedia/{id}")
     public ResponseEntity<CarDto> updateCar(@RequestBody CarDto carDto, @PathVariable int id)
         {
 
@@ -75,7 +75,7 @@ public class CarsController {
 
 
 
-        @DeleteMapping("/ridepedia/{id}/delete")
+        @DeleteMapping("/ridepedia/{id}")
         public ResponseEntity<String> deleteCar(@PathVariable int id)
         {
             carsService.deleteCar(id);

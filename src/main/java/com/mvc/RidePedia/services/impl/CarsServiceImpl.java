@@ -28,18 +28,23 @@ public class CarsServiceImpl implements CarsService {
 
     @Override
     public CarDto createCar(CarDto carDto) {
-        Cars cars =new Cars();
-        cars.setName(carDto.getName());
-        cars.setType(carDto.getType());
+        Cars car =new Cars();
+        car.setName(carDto.getName());
+        car.setType(carDto.getType());
+        car.setBrand(carDto.getBrand());
+        car.setProductionYear(carDto.getPoductionYear());
 
-        Cars newCars = carsRepository.save(cars);
+
+        Cars newCar = carsRepository.save(car);
 
 
         CarDto carResponse=new CarDto();
 
-        carResponse.setId(newCars.getId());
-        carResponse.setName(carDto.getName());
-        carResponse.setType(newCars.getType());
+        carResponse.setId(newCar.getId());
+        carResponse.setName(newCar.getName());
+        carResponse.setType(newCar.getType());
+        carResponse.setBrand(newCar.getBrand());
+        carResponse.setPoductionYear(newCar.getProductionYear());
         return carResponse;
 
     }
@@ -74,41 +79,47 @@ public class CarsServiceImpl implements CarsService {
     @Override
     public CarDto updateCar(CarDto carDtoref, int id) {
 
-        Cars cars = carsRepository.findById(id).orElseThrow(()->new CarNotFoundEx("not updated"));
+        Cars car = carsRepository.findById(id).orElseThrow(()->new CarNotFoundEx("not updated"));
 
-        cars.setName(carDtoref.getName());
-        cars.setType(carDtoref.getType());
+        car.setName(carDtoref.getName());
+        car.setType(carDtoref.getType());
+        car.setBrand(carDtoref.getBrand());
+        car.setProductionYear(carDtoref.getPoductionYear());
 
 
-        Cars updatedCars = carsRepository.save(cars);
+        Cars updatedCar = carsRepository.save(car);
 
 
-        return mapToDto(updatedCars);
+        return mapToDto(updatedCar);
     }
 
 
 
     @Override
     public void deleteCar(int id) {
-        Cars cars = carsRepository.findById(id).orElseThrow(()-> new CarNotFoundEx("cars couldn't deleted"));
+        Cars car = carsRepository.findById(id).orElseThrow(()-> new CarNotFoundEx("cars couldn't deleted"));
         carsRepository.deleteById(id);
     }
 
-    private CarDto mapToDto(Cars cars)
+    private CarDto mapToDto(Cars car)
     {
         CarDto carDto =new CarDto();
-        carDto.setName(cars.getName());
-        carDto.setId(cars.getId());
-        carDto.setType(cars.getType());
+        carDto.setName(car.getName());
+        carDto.setId(car.getId());
+        carDto.setType(car.getType());
+        carDto.setBrand(car.getBrand());
+        carDto.setPoductionYear(car.getProductionYear());
         return carDto;
     }
     private Cars mapToEntity(CarDto carDto)
     {
-        Cars cars =new Cars();
-        cars.setName(carDto.getName());
-        cars.setId(carDto.getId());
-        cars.setType(carDto.getType());
-        return cars;
+        Cars car =new Cars();
+        car.setName(carDto.getName());
+        car.setId(carDto.getId());
+        car.setType(carDto.getType());
+        car.setBrand(carDto.getBrand());
+        car.setProductionYear(carDto.getPoductionYear());
+        return car;
 
 
     }

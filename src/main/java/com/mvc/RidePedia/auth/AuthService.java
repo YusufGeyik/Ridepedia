@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,15 +66,30 @@ public class AuthService {
                             authenticationRequest.getPassword()
                     )
             );
+            logger.info("Authentication: " + authentication);
+            logger.info("SecurityContextHolder: " + SecurityContextHolder.getContext());
+            logger.info("SecurityContextHolder.getAuthentication(): " + SecurityContextHolder.getContext().getAuthentication());
+            logger.info("Authentication.isAuthenticated(): " + authentication.isAuthenticated());
 
             // Authentication başarılı ise
-            var repUser = (User) authentication.getPrincipal(); // Authenticated edilen kullanıcı
+            if (authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                var repUser = (User) authentication.getPrincipal(); // Authenticated edilen kullanıcı
 
-            // JWT token oluşturuluyor
-            String token = jwtService.generateToken(repUser);
+                // JWT token oluşturuluyor
+                String token = jwtService.generateToken(repUser);
 
-            // Yanıt dönülüyor
-            return AuthenticationResponse.builder().accessToken(token).build();
+
+
+                // Yanıt dönülüyor
+                return AuthenticationResponse.builder().accessToken(token).build();
+
+            } else {
+                // Authentication başarısız ise
+                logger.error("Authentication failed");
+                throw new RuntimeException("Authentication failed. Invalid email or password.");
+            }
+
 
         } catch (Exception e) {
             // Hata durumunda loglama yapın ve uygun bir yanıt döndürün
@@ -93,6 +109,7 @@ public class AuthService {
         return AuthenticationResponse.builder().accessToken(token).build();
 
     }
+
 
 
 

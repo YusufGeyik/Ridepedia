@@ -28,8 +28,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto createReview(int carId, ReviewDto reviewDto) {
         Reviews review= mapToEntity(reviewDto);
-        Cars cars = carsRepository.findById(carId).orElseThrow(()->new CarNotFoundEx("Yorum Yapılamaya çalışılan car bulunamadı."));
-        review.setCar(cars);
+        Cars car = carsRepository.findById(carId).orElseThrow(()->new CarNotFoundEx("Yorum Yapılamaya çalışılan car bulunamadı."));
+        review.setCar(car);
         Reviews newReview=reviewRepository.save(review);
         return maptoDto(newReview);
 
@@ -38,10 +38,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewDto findById(int reviewId,int carId) {
-        Cars cars = carsRepository.findById(carId).orElseThrow(()->new CarNotFoundEx("car not found"));
+        Cars car = carsRepository.findById(carId).orElseThrow(()->new CarNotFoundEx("car not found"));
         ReviewDto reviewDto=new ReviewDto();
         Reviews review=reviewRepository.findById(reviewId).orElseThrow(()->new ReviewNotFoundEx("review could not found"));
-        if(review.getCar().getId()!= cars.getId())
+        if(review.getCar().getId()!= car.getId())
         {
             throw new ReviewNotFoundEx("this review does not belong to a car");
         }else {
@@ -60,8 +60,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto updatewReview(ReviewDto reviewDto,int reviewId,int carId ) {
        Reviews review=reviewRepository.findById(reviewId).orElseThrow(()->new ReviewNotFoundEx("review with associated cars not found"));
-       Cars cars = carsRepository.findById(carId).orElseThrow(()->new CarNotFoundEx("car with associated review not found"));
-       if(review.getCar().getId()!= cars.getId())
+       Cars car = carsRepository.findById(carId).orElseThrow(()->new CarNotFoundEx("car with associated review not found"));
+       if(review.getCar().getId()!= car.getId())
        {
            throw new ReviewNotFoundEx("review is not belong a cars");
        }
